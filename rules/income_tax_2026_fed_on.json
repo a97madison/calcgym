@@ -1,0 +1,81 @@
+{
+  "id": "rule:income_tax_2026_fed_on@v1",
+  "tax_year": 2026,
+  "description": "2026 federal and Ontario personal income tax on a given taxable income, computed the way CRA's T4032-ON step-by-step example and T4127 formulas do it: bracket tax, minus non-refundable credits at the lowest rate (basic personal amounts plus optional extra credit amounts), Ontario surtax, Ontario Health Premium, and the Ontario basic tax reduction.",
+  "scope_exclusions": [
+    "Ontario Low-income Individuals and Families Tax (LIFT) credit (on the T1 ON428, not in the payroll method)",
+    "Ontario tax reduction amounts for dependants (v0 assumes none)",
+    "federal top-up tax credit for credit amounts above the first bracket (v0 caps extra credit amounts at $10,000, far below $58,523)",
+    "dividend tax credits, alternative minimum tax, foreign tax credits, refundable credits, Quebec"
+  ],
+  "retrieved": "2026-11-20",
+  "citations": [
+    {
+      "url": "https://www.canada.ca/en/revenue-agency/services/tax/individuals/tax-rates-brackets/current-year.html",
+      "title": "CRA, Current year tax rates and income brackets (2026)",
+      "retrieved": "2026-11-20",
+      "used_for": "Federal 2026 brackets and rates (14%, 20.5%, 26%, 29%, 33%) and Ontario 2026 brackets and rates (5.05%, 9.15%, 11.16%, 12.16%, 13.16%)."
+    },
+    {
+      "url": "https://www.canada.ca/en/revenue-agency/services/tax/individuals/frequently-asked-questions-individuals/adjustment-personal-income-tax-benefit-amounts.html",
+      "title": "CRA, Indexation adjustment for personal income tax and benefit amounts",
+      "retrieved": "2026-11-20",
+      "used_for": "2026 federal basic personal amount: $16,452 maximum, $14,829 minimum, $1,623 enhanced portion; bracket thresholds cross-check."
+    },
+    {
+      "url": "https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4032-payroll-deductions-tables/t4032on-jan/t4032on-january-general-information.html",
+      "title": "CRA, T4032-ON Payroll Deductions Tables, Ontario, effective January 1, 2026 (Rev. 26)",
+      "retrieved": "2026-11-20",
+      "used_for": "Chart 1 and Chart 2 constants K and KP, Ontario BPA $12,989, Ontario surtax thresholds $5,818 and $7,446 (20% and 36%), Ontario Health Premium schedule, Ontario tax reduction basic amount $300, and the two worked examples used as fixed tests."
+    },
+    {
+      "url": "https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4127-payroll-deductions-formulas/t4127-jan/t4127-jan-payroll-deductions-formulas-computer-programs.html",
+      "title": "CRA, T4127 Payroll Deductions Formulas, 124th edition (effective January 1, 2027), which republishes Tables 8.22 and 8.23 for 2026",
+      "retrieved": "2026-11-20",
+      "used_for": "Shape of the federal BPA phase-out formula (linear between the 29% and 33% thresholds, division not rounded, result rounded to the cent half up), Ontario surtax and tax reduction formulas (S = lesser of T4+V1 and 2*(basic amount) - (T4+V1)), and the 2026 Table 8.22/8.23 cross-check of K, KP, ON BPA 12,989, surtax 5,818/7,446, reduction 300."
+    }
+  ],
+  "federal": {
+    "brackets": [
+      { "from": 0, "rate": "0.14" },
+      { "from": 58523, "rate": "0.205" },
+      { "from": 117045, "rate": "0.26" },
+      { "from": 181440, "rate": "0.29" },
+      { "from": 258482, "rate": "0.33" }
+    ],
+    "payroll_constants_K": [0, 3804, 10241, 15685, 26024],
+    "credit_rate": "0.14",
+    "bpa": { "max": 16452, "min": 14829, "phase_out_start": 181440, "phase_out_end": 258482 }
+  },
+  "ontario": {
+    "brackets": [
+      { "from": 0, "rate": "0.0505" },
+      { "from": 53891, "rate": "0.0915" },
+      { "from": 107785, "rate": "0.1116" },
+      { "from": 150000, "rate": "0.1216" },
+      { "from": 220000, "rate": "0.1316" }
+    ],
+    "payroll_constants_KP": [0, 2210, 4376, 5876, 8076],
+    "credit_rate": "0.0505",
+    "bpa": 12989,
+    "surtax": [
+      { "over": 5818, "rate": "0.20" },
+      { "over": 7446, "rate": "0.36" }
+    ],
+    "tax_reduction_basic_amount": 300,
+    "health_premium": [
+      { "over": 20000, "upto": 36000, "base": 0, "rate": "0.06", "cap": 300 },
+      { "over": 36000, "upto": 48000, "base": 300, "rate": "0.06", "cap": 450 },
+      { "over": 48000, "upto": 72000, "base": 450, "rate": "0.25", "cap": 600 },
+      { "over": 72000, "upto": 200000, "base": 600, "rate": "0.25", "cap": 750 },
+      { "over": 200000, "upto": null, "base": 750, "rate": "0.25", "cap": 900 }
+    ]
+  },
+  "methods": {
+    "bracket": "Default. Tax on each bracket portion, summed, rounded to the cent. Matches the statutory rate table (Schedule 1 / ON428 style).",
+    "payroll_constants": "CRA payroll shortcut: rate of the top bracket reached times income, minus the whole-dollar constant K or KP. Can differ from 'bracket' by under $1. Used only to reproduce the T4032-ON worked examples exactly."
+  },
+  "rounding": "Every line is rounded to the cent, half up, before it is used in the next line, as in the T4032-ON worked examples: bracket tax, BPA after phase-out, credits (credit base times the lowest rate), surtax, health premium. Net federal tax and basic Ontario tax floor at 0.",
+  "grading_tolerance": { "federal_tax": 0.10, "ontario_tax": 0.10, "total_tax": 0.10 },
+  "grading_note": "Plus or minus $0.10 absorbs rounding-order differences (rounding each line versus rounding once at the end shifts a result by at most a few cents). It does not absorb any wrong rate, threshold or omitted component, which moves the answer by dollars."
+}

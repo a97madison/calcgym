@@ -1,0 +1,31 @@
+{
+  "id": "rule:mortgage_ca@v1",
+  "description": "Blended-payment (principal plus interest) mortgage payments where the quoted annual rate is compounded half-yearly or yearly, not in advance.",
+  "retrieved": "2026-11-20",
+  "citations": [
+    {
+      "url": "https://laws-lois.justice.gc.ca/eng/acts/I-15/page-1.html",
+      "title": "Interest Act (R.S.C., 1985, c. I-15), section 6 (Act current to 2026-10-29)",
+      "retrieved": "2026-11-20",
+      "used_for": "Blended-payment mortgages must state the rate 'calculated yearly or half-yearly, not in advance'. This is why the checker supports exactly two compounding bases: semi-annual and annual."
+    },
+    {
+      "url": "https://www.canada.ca/en/financial-consumer-agency/services/industry/bulletins/information-box-examples/credit-agreement-fixed-mortgage.html",
+      "title": "FCAC, Credit agreement for a fixed interest loan for a fixed amount (Mortgage), information box example",
+      "retrieved": "2026-11-20",
+      "used_for": "Shows the standard disclosure wording for a fixed-rate mortgage: 'This interest is compounded twice per year but charged monthly.' Basis for semi-annual as the default. Its $4,565.87 payment includes a property tax portion that is not broken out, so it is NOT used as a numeric test case."
+    }
+  ],
+  "compounding_periods_per_year": { "semi-annual": 2, "annual": 1 },
+  "default_compounding": "semi-annual",
+  "payment_frequencies": { "monthly": 12, "semi-monthly": 24, "bi-weekly": 26, "weekly": 52 },
+  "formula": {
+    "periodic_rate": "i = (1 + j/m)^(m/k) - 1, j = quoted annual rate as a decimal, m = compounding periods per year, k = payments per year",
+    "payment": "PMT = P * i / (1 - (1 + i)^(-n)), n = amortization_years * k; if j = 0 then PMT = P / n",
+    "balance_after": "B_t = P*(1+i)^t - PMT_rounded * ((1+i)^t - 1)/i, using the payment rounded to the cent, as a lender would charge it",
+    "total_interest": "PMT_raw * n - P (unrounded payment, so the figure does not depend on how the final payment is adjusted)"
+  },
+  "rounding": "Payment, balance and total interest are rounded to the cent, half up.",
+  "grading_tolerance": { "payment": 0.01, "balance_after_term": 1.00, "total_interest": 1.00, "effective_annual_rate_pct": 0.0001 },
+  "grading_note": "Payment must match to the cent. Balance and total interest get plus or minus $1.00 because lenders differ in how they round per-period interest; that spread is a few cents to well under a dollar over a 5 to 30 year schedule."
+}

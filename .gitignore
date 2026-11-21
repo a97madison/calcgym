@@ -1,0 +1,5 @@
+.cache/
+node_modules/
+# Read-only copy of Anthony's tool-websites repo (commit 69133650d6d6bc1d68c77e13bbe530a9d7d779c8).
+# It includes private working notes, so it stays out of CalcGym history. Provenance cites path + commit.
+vendor/

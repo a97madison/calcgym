@@ -1,0 +1,25 @@
+{
+  "id": "rule:gst_hst_rates@v1",
+  "description": "GST/HST rate by province or territory and date of supply. GST and HST only; provincial sales taxes (PST, QST, RST) are out of scope.",
+  "retrieved": "2026-11-20",
+  "citations": [
+    {
+      "url": "https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/charge-collect-which-rate/calculator.html",
+      "title": "GST/HST calculator (and rates), Canada Revenue Agency",
+      "retrieved": "2026-11-20",
+      "used_for": "Table 'GST/HST rates since April 1, 2013' (all four periods) and the note that the Nova Scotia HST rate fell to 14% on April 1, 2025."
+    }
+  ],
+  "earliest_supported_date": "2013-04-01",
+  "hst_provinces": ["NB", "NL", "NS", "ON", "PE"],
+  "periods": [
+    { "from": "2013-04-01", "to": "2016-06-30", "rates_pct": { "AB": 5, "BC": 5, "MB": 5, "NB": 13, "NL": 13, "NT": 5, "NS": 15, "NU": 5, "ON": 13, "QC": 5, "PE": 14, "SK": 5, "YT": 5 } },
+    { "from": "2016-07-01", "to": "2016-09-30", "rates_pct": { "AB": 5, "BC": 5, "MB": 5, "NB": 13, "NL": 15, "NT": 5, "NS": 15, "NU": 5, "ON": 13, "QC": 5, "PE": 14, "SK": 5, "YT": 5 } },
+    { "from": "2016-10-01", "to": "2025-03-31", "rates_pct": { "AB": 5, "BC": 5, "MB": 5, "NB": 15, "NL": 15, "NT": 5, "NS": 15, "NU": 5, "ON": 13, "QC": 5, "PE": 15, "SK": 5, "YT": 5 } },
+    { "from": "2025-04-01", "to": null, "rates_pct": { "AB": 5, "BC": 5, "MB": 5, "NB": 15, "NL": 15, "NT": 5, "NS": 14, "NU": 5, "ON": 13, "QC": 5, "PE": 15, "SK": 5, "YT": 5 } }
+  ],
+  "province_names": { "AB": "Alberta", "BC": "British Columbia", "MB": "Manitoba", "NB": "New Brunswick", "NL": "Newfoundland and Labrador", "NT": "Northwest Territories", "NS": "Nova Scotia", "NU": "Nunavut", "ON": "Ontario", "QC": "Quebec", "PE": "Prince Edward Island", "SK": "Saskatchewan", "YT": "Yukon" },
+  "rounding": "Tax is rounded to the cent, half up. In remove mode the pre-tax base is rounded to the cent, half up, and tax = total - base.",
+  "grading_tolerance": { "tax": 0.01, "base": 0.01, "total": 0.01 },
+  "grading_note": "CRA's own calculator page warns that rounding can move totals by a cent or two, so the grader accepts plus or minus 0.01 on every money field."
+}

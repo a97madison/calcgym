@@ -1,0 +1,70 @@
+[1/7] fixed tests
+✔ gst_hst: Ontario 13% HST on $100 (1.913728ms)
+✔ gst_hst: Quebec charges 5% GST only (QST is out of scope) (0.181203ms)
+✔ gst_hst: remove mode backs tax out of a tax-included total (0.103366ms)
+✔ gst_hst: rate change dates from the CRA table (0.147167ms)
+✔ gst_hst: half cent rounds up ($0.50 at 13% = $0.065 -> $0.07) (0.120177ms)
+✔ gst_hst: rejects bad input (0.254366ms)
+✔ mortgage_ca: zero rate is principal / payments (0.16369ms)
+✔ mortgage_ca: 5% compounded semi-annually is a 5.0625% effective annual rate (0.128844ms)
+✔ mortgage_ca: annual compounding uses (1+j)^(1/k) - 1 (0.097715ms)
+✔ mortgage_ca: semi-annual payment is below the Toolsloft US-style (monthly compounding) payment (0.16031ms)
+✔ mortgage_ca: FCAC 2009 sample box consistency check (inferred, not an official breakdown) (0.12308ms)
+✔ mortgage_ca: balance after the final year of a 1-year-shorter term is small and positive (0.097137ms)
+✔ mortgage_ca: rejects bad input (0.165158ms)
+✔ income_tax_on: CRA T4032-ON 2026 worked example 1 (below YMPE) reproduced to the cent (0.596752ms)
+✔ income_tax_on: CRA T4032-ON 2026 worked example 2 (above YMPE) reproduced to the cent (0.126363ms)
+✔ income_tax_on: bracket method stays within $1 of the payroll shortcut on the CRA examples (0.208354ms)
+✔ income_tax_on: income equal to the federal BPA owes nothing; Ontario reduction wipes out the small Ontario tax (0.07478ms)
+✔ income_tax_on: $150,000 hits both Ontario surtax tiers (hand-computed) (0.085826ms)
+✔ income_tax_on: federal BPA phase-out (T4127 formula, 2026 amounts) (0.060631ms)
+✔ income_tax_on: Ontario Health Premium tiers (0.205468ms)
+✔ income_tax_on: rejects negative income (0.103341ms)
+✔ grade: parses the ANSWER line and applies tolerance (0.443033ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 96.959398
+[2/7] fuzz cases from the Python oracle
+wrote /workspace/calcgym/oracle/../.cache/fuzz-cases.json: 6000 gst_hst, 6000 mortgage_ca, 6000 income_tax_on cases (seed 20261120)
+[3/7] differential fuzz
+gst_hst fuzz: 6000/6000 agree exactly
+mortgage_ca fuzz: 6000 exact, 0 half-cent-boundary ties, 6000 total
+income_tax_on fuzz: 6000/6000 agree exactly on all 12 output lines
+✔ gst_hst: 6000 fuzz cases agree to the cent (22.843468ms)
+✔ mortgage_ca: 6000 fuzz cases agree to the cent (9.533289ms)
+✔ income_tax_on: 6000 fuzz cases agree to the cent on every line (66.888993ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 241.277707
+[4/7] mutation smoke
+  caught: Nova Scotia HST left at 15% after 2025-04-01
+  caught: PEI rate wrong in Jul-Sep 2016 (15 instead of 14)
+  caught: monthly compounding sneaks in (m=12)
+  caught: federal lowest rate 15% instead of 14%
+  caught: federal BPA 16,129 (2025 value)
+  caught: Ontario BPA 12,747 (2025 value)
+  caught: Ontario surtax threshold off by 108 (5,710)
+  caught: Ontario 4th bracket rate 12.16 -> 12.06
+  caught: OHP top cap 900 -> 750
+  caught: Ontario tax reduction 300 -> 294
+mutation smoke: 10/10 mutations caught
+[5/7] regenerate sample tasks
+wrote 30 tasks to tasks/v0-sample.jsonl; 0 new provenance entries
+[6/7] Python oracle tests
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.005s
+
+OK
+[7/7] em-dash scan
+VERIFY PASSED

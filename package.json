@@ -1,0 +1,15 @@
+{
+  "name": "calcgym",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Verifiable Canadian tax and finance tasks with deterministic answer checkers.",
+  "engines": { "node": ">=23.6" },
+  "scripts": {
+    "test": "node --test tests/checkers.test.ts && python3 tests/test_oracle.py",
+    "fuzz": "python3 oracle/fuzz_gen.py && node --test tests/fuzz.test.ts",
+    "mutation": "bash tests/mutation_smoke.sh",
+    "tasks": "node tasks/generate.ts 10 tasks/v0-sample.jsonl",
+    "verify": "bash verify.sh"
+  }
+}
